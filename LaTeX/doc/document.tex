@@ -1,0 +1,138 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\title{Block-by-block description of MATLAB code}
+\author{}
+\date{}
+
+% Code style
+\lstset{
+	language=Matlab,
+	backgroundcolor=\color{gray!10},
+	basicstyle=\ttfamily\small,
+	frame=single,
+	breaklines=true,
+	keywordstyle=\color{blue},
+	commentstyle=\color{green!60!black},
+	stringstyle=\color{red},
+	showstringspaces=false,
+	numbers=left,
+	numberstyle=\tiny\color{gray}
+}
+
+\begin{document}
+	
+	\maketitle
+	
+	\section*{Block-by-block description}
+	
+	\subsection*{1. Setting convergence and stagnation thresholds}
+	
+	\textbf{Convergence threshold (target residual norm):}  
+	This value defines when the optimization is considered converged.
+	
+	\begin{lstlisting}
+		target_residual_norm = 1e-3;
+	\end{lstlisting}
+	
+	\vspace{1em}
+	
+	\textbf{Stagnation tolerance:}  
+	If residual norm does not change significantly (difference less than this value), the algorithm is considered stuck.
+	
+	\begin{lstlisting}
+		stagnation_tol = 1e17;
+	\end{lstlisting}
+	
+	\subsection*{2. Initialization of initial guess}
+	
+	\textbf{Initial parameter vector:}  
+	Pack parameters and fields into a vector.
+	
+	\begin{lstlisting}
+		x0 = packFieldsAndInterface(fields, params.M, params.N, length(params.c_init), params.c_init);
+	\end{lstlisting}
+	
+	\subsection*{3. Definition of anonymous residual function}
+	
+	\textbf{Anonymous function computing residual vector:}
+	
+	\begin{lstlisting}
+		fun = @(x) computeResidualVector(x, params, dx, dy, X, Y, x_interface);
+	\end{lstlisting}
+	
+	\subsection*{4. Optimization options}
+	
+	\textbf{Options for \texttt{lsqnonlin}:}  
+	- detailed display,  
+	- max iterations 100,  
+	- function tolerance 1e-6.
+	
+	\begin{lstlisting}
+		options = optimoptions('lsqnonlin', ...
+		'Display', 'iter-detailed', ...
+		'MaxIterations', 100, ...
+		'FunctionTolerance', 1e-6);
+	\end{lstlisting}
+	
+	\subsection*{5. Initialization for restart loop}
+	
+	\textbf{Variables to control restarts and residual norms:}
+	
+	\begin{lstlisting}
+		max_restarts = 10;
+		restart_count = 0;
+		resnorm = Inf;
+		previous_resnorm = Inf;
+	\end{lstlisting}
+	
+	\subsection*{6. Restart optimization loop}
+	
+	\textbf{Run optimization while residual norm is above target and restarts are below maximum:}
+	
+	\begin{lstlisting}
+		while resnorm > target_residual_norm && restart_count < max_restarts
+		fprintf('Run #%d\n', restart_count + 1);
+		
+		[x_opt, resnorm, residual, exitflag, output] = lsqnonlin(fun, x0, [], [], options);
+		
+		fprintf('resnorm after iteration: %.6e\n', resnorm);
+		
+		delta_resnorm = abs(previous_resnorm - resnorm);
+		if delta_resnorm < stagnation_tol
+		fprintf('resnorm change too small: Δ = %.2e < %.2e → restart\n', delta_resnorm, stagnation_tol);
+		end
+		
+		previous_resnorm = resnorm;
+		x0 = x_opt;
+		restart_count = restart_count + 1;
+		
+		save('optimization_intermediate.mat', 'x0', 'resnorm', 'restart_count');
+		end
+	\end{lstlisting}
+	
+	\subsection*{7. Final output}
+	
+	\textbf{Check if convergence was successful:}
+	
+	\begin{lstlisting}
+		if resnorm <= target_residual_norm
+		fprintf('Convergence achieved: resnorm = %.6e\n', resnorm);
+		else
+		fprintf('Accuracy not reached after %d restarts. Final resnorm = %.6e\n', restart_count, resnorm);
+		end
+	\end{lstlisting}
+	
+	\subsection*{8. Unpacking solution}
+	
+	\textbf{Convert optimized vector back to fields and parameters:}
+	
+	\begin{lstlisting}
+		[fields_opt, c_opt] = unpackFieldsAndInterface(x_opt, params.M, params.N, length(params.c_init));
+	\end{lstlisting}
+	
+\end{document}
