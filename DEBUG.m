@@ -1,5 +1,6 @@
 clear; clc; close all;
-cd("C:\Users\MSI\Desktop\sim") % project folder
+%cd("C:\Users\MSI\Desktop\sim") % project folder
+cd("C:\Users\MSI\Documents\GitHub\boiling-simulation");
 addpath(genpath(cd)); % path to folder
 % Загрузить параметры
 
@@ -51,10 +52,11 @@ fprintf("L2 norm of R = %e\n",RR)
 toc
 
 %% Визуализация невязки уравнения непрерывности
-% a = continuity_du_y(params,phase,R_continuity,dy);
+
 figure;
- pcolor(X, Y, R_continuity);
-% pcolor(X, Y, a);
+
+pcolor(X, Y, R_continuity);
+
 shading interp;
 colorbar;
 colormap jet;
@@ -250,18 +252,3 @@ loss = computeTotalResidual(x0, params, dx, dy, X, Y, x_interface);
 fprintf('Значение функции потерь:  %e\n',loss)
 
 
-%%
-% navier stokes dR/dp
- a = computePressureDerivatives(R_ns_x,R_ns_y,dx,dy);
- 
-figure
-
-pcolor(X, Y, a);
-shading interp;
-colorbar;
-colormap jet;
-
-xlabel('x (м)');
-ylabel('y (м)');
-axis equal tight
-title('dR/dP');
