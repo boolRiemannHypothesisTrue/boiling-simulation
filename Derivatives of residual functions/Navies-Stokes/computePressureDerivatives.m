@@ -8,6 +8,6 @@ function dRdP = computePressureDerivatives(Qx, Qy, dx, dy)
 
     % Внутренние узлы
     i = 2:M-1; j = 2:N-1;
-    dRdP(i,j) = ( Qx(i-1,j) - Qx(i+1,j) )/(2*dx) ...
-              + ( Qy(i,  j-1) - Qy(i,  j+1) )/(2*dy);
+    dRdP(i,j) = ( Qx(i-1,j) - Qx(i+1,j) ) / (2 * dx) ...
+              + ( Qy(i,  j-1) - Qy(i,  j+1) ) /(2 * dy);
 end
