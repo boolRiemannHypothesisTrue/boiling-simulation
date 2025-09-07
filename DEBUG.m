@@ -22,7 +22,7 @@ tic
               params.x_min, params.x_max, ...
               params.y_min, params.y_max);
 
-% Перестраивается на каждой итерации (при новом c)
+
 [y_interface, phase] = buildInterfaceAndPhase(X, Y, x_interface, params.c_init, ...
                                               params.y_min, params.y_max);
 
@@ -229,26 +229,3 @@ xlabel('x (м)');
 ylabel('y (м)');
 axis equal tight
 title('Residual 9');
-%% Сбор всех норм невязок в один массив
-
-residuals = computeAllResiduals(fields, phase, params, dx, dy, y_interface, x_interface);
-
-total_loss = 0;
-
-for k = 1:length(residuals)
-    total_loss = total_loss + norm(residuals{k}(:));
-end
-
-fprintf('Общая невязка (сумма L2 норм):  %e\n',total_loss)
-
-%% Добавление наказаний за отклонение от граничных условий (делается через computeTotalResidual) 
-
-% === Упаковка всех переменных в x ===
-x0 = packFieldsAndInterface(fields, params.M, params.N, length(params.c_init), params.c_init);
-
-% === Вызов функции потерь ===
-loss = computeTotalResidual(x0, params, dx, dy, X, Y, x_interface);
-
-fprintf('Значение функции потерь:  %e\n',loss)
-
-
