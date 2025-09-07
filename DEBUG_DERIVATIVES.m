@@ -128,3 +128,48 @@ axis equal tight
 title('Qx * dQxduy');
 
 norm(a)
+
+%% ∑∑〖Q_y^(i1,j1)  (∂Q_y^(i1,j1))/(∂u_x^(i,j) )〗
+
+
+
+Qy = computeNSResidualY_full(fields, params, phase, dx, dy); 
+a = Qy_dQy_dux(Qy,fields,params,phase,dx,dy);
+
+ 
+figure
+
+pcolor(X, Y, a);
+shading interp;
+colorbar;
+colormap jet;
+
+xlabel('x (м)');
+ylabel('y (м)');
+axis equal tight
+title('Qx * dQxduy');
+
+norm(a)
+
+
+%% ∑∑〖Q_y^(i1,j1)  (∂Q_y^(i1,j1))/(∂u_x^(i,j) )〗
+
+
+
+Qy = computeNSResidualY_full(fields, params, phase, dx, dy); 
+a = Qy_dQy_duy(Qy, fields,params,phase,dx,dy);
+
+ 
+figure
+
+pcolor(X, Y, a);
+shading interp;
+colorbar;
+colormap jet;
+
+xlabel('x (м)');
+ylabel('y (м)');
+axis equal tight
+title('Qx * dQxduy');
+
+norm(a)
