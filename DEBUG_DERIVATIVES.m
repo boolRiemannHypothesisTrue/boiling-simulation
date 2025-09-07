@@ -64,16 +64,16 @@ axis equal tight;
 
 %% УРАВНЕНИЯ НАВЬЕ-СТОКСА/БАЛАНС МОМЕНТА ИМПУЛЬСА (ПРОИЗВОДНЫЕ ПО P,U_X,U_Y)
 
-% d/dP
+%  ∑∑(Q_x^(i1,j1)  (∂Q_x^(i1,j1))/(∂P^(i,j) )+Q_y^(i1,j1)  (∂Q_y^(i1,j1))/(∂P^(i,j) )) 
 
-R_ns_x = computeNSResidualX_full(fields, params, phase, dx, dy); 
-R_ns_y = computeNSResidualY_full(fields, params, phase, dx, dy);
+Qx = computeNSResidualX_full(fields, params, phase, dx, dy); 
+Qy = computeNSResidualY_full(fields, params, phase, dx, dy);
 
-dRdP = computePressureDerivatives(R_ns_x,R_ns_y,dx,dy);
+a  = Qx_dQx_dp_PLUS_Qy_dQy_dp(Qx,Qy,dx,dy);
  
 figure
 
-pcolor(X, Y, dRdP);
+pcolor(X, Y, a);
 shading interp;
 colorbar;
 colormap jet;
@@ -81,7 +81,50 @@ colormap jet;
 xlabel('x (м)');
 ylabel('y (м)');
 axis equal tight
-title('dR/dP');
+title('Qx*dQxdp + Qy*dQydp');
 
-% d/du_x для x-ой проекции уравнений Навье-Стокса
+norm(a)
 
+%% ∑∑〖Q_x^(i1,j1)  (∂Q_x^(i1,j1))/(∂u_x^(i,j) )〗
+
+
+
+Qx = computeNSResidualX_full(fields, params, phase, dx, dy); 
+a = Qx_dQx_dux(Qx,fields,params,phase,dx,dy);
+
+ 
+figure
+
+pcolor(X, Y, a);
+shading interp;
+colorbar;
+colormap jet;
+
+xlabel('x (м)');
+ylabel('y (м)');
+axis equal tight
+title('Qx * dQxdux');
+
+norm(a)
+
+%% ∑∑〖Q_x^(i1,j1)  (∂Q_x^(i1,j1))/(∂u_y^(i,j) )〗
+
+
+
+Qx = computeNSResidualX_full(fields, params, phase, dx, dy); 
+a = Qx_dQx_duy(Qx,fields,params,phase,dx,dy);
+
+ 
+figure
+
+pcolor(X, Y, a);
+shading interp;
+colorbar;
+colormap jet;
+
+xlabel('x (м)');
+ylabel('y (м)');
+axis equal tight
+title('Qx * dQxduy');
+
+norm(a)
