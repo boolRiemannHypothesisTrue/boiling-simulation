@@ -1,4 +1,4 @@
-function R = computeEnergyResidual(fields, params, phase, dx, dy)
+function val = computeEnergyResidual(fields, params, phase, dx, dy)
     % Вычисляет невязку уравнения энергии Q_T
     % fields: структура с полями u_x, u_y, T
     % params: структура с параметрами rho_liquid, rho_vapor, Cp_liquid, Cp_vapor, lambda_liquid, lambda_vapor, mu_liquid, mu_vapor
@@ -6,7 +6,7 @@ function R = computeEnergyResidual(fields, params, phase, dx, dy)
     % dx, dy: шаги сетки
     
         [M, N] = size(phase);
-        R = zeros(M, N);
+        val = zeros(M, N);
     
         % Извлекаем поля
         u_x = fields.u_x;
@@ -19,19 +19,16 @@ function R = computeEnergyResidual(fields, params, phase, dx, dy)
         lambda = params.lambda_liquid * (1 - phase) + params.lambda_vapor * phase;
         mu = params.mu_liquid * (1 - phase) + params.mu_vapor * phase;
         
-        for i = 2:M-1
-            for j=2:N-1
-                R(i,j) = rho(i,j) * Cp(i,j) * ( u_x(i,j) * ( T(i+1,j) - T(i-1,j) ) / (2 * dx) + ...
-                    u_y(i,j) * ( T(i,j+1) - T(i,j-1) ) / (2 * dy) ) - ...
-                    ( lambda(i+1,j) * ( T(i+1,j) - T(i,j) ) / dx^2 + lambda(i,j) * ( T(i-1,j) - T(i,j) ) / dx^2 ) - ...
-                    ( lambda(i,j+1) * ( T(i,j+1) - T(i,j) ) / dy^2 + lambda(i,j) * ( T(i,j-1) - T(i,j) ) / dy^2 ) - ...
-                    (4/3) * mu(i,j) * ( ( u_x(i+1,j) - u_x(i-1,j) ) / (2 * dx) + (u_y(i,j+1) - u_y(i,j-1) ) / (2 * dy) )^2 - ...
-                    mu(i,j) * ( (u_y(i+1,j) - u_y(i-1,j) ) / (2 * dx) + ( (u_x(i,j+1) - u_x(i,j-1) ) / (2 * dy) ) )^2 + ...
-                    4 * mu(i,j) *  ( u_x(i+1,j) - u_x(i-1,j) ) * ( u_y(i,j+1) - u_y(i,j-1) ) / (4 * dx * dy); 
+        i = 2:M-1;
+        j=2:N-1;
 
-            end
-        end
-
+        val(i,j) = rho(i,j) * Cp(i,j) * ( u_x(i,j) * ( T(i+1,j) - T(i-1,j) ) / (2 * dx) + ...
+            u_y(i,j) * ( T(i,j+1) - T(i,j-1) ) / (2 * dy) ) - ...
+            ( lambda(i+1,j) * ( T(i+1,j) - T(i,j) ) / dx^2 + lambda(i,j) * ( T(i-1,j) - T(i,j) ) / dx^2 ) - ...
+            ( lambda(i,j+1) * ( T(i,j+1) - T(i,j) ) / dy^2 + lambda(i,j) * ( T(i,j-1) - T(i,j) ) / dy^2 ) - ...
+            (4/3) * mu(i,j) * ( ( u_x(i+1,j) - u_x(i-1,j) ) / (2 * dx) + (u_y(i,j+1) - u_y(i,j-1) ) / (2 * dy) )^2 - ...
+            mu(i,j) * ( (u_y(i+1,j) - u_y(i-1,j) ) / (2 * dx) + ( (u_x(i,j+1) - u_x(i,j-1) ) / (2 * dy) ) )^2 + ...
+            (16/3) * mu(i,j) *  ( u_x(i+1,j) - u_x(i-1,j) ) * ( u_y(i,j+1) - u_y(i,j-1) ) / (2 * dx * 2 * dy); 
 
 
         
