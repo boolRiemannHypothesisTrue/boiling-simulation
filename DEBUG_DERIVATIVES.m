@@ -173,3 +173,47 @@ axis equal tight
 title('Qx * dQxduy');
 
 norm(a)
+
+
+%% ∑∑〖Q_T^(i1,j1)  (∂Q_T^(i1,j1))/(∂T^(i,j) )〗
+
+
+
+QT = computeEnergyResidual(fields, params, phase, dx, dy); 
+a = QT_dQT_dT(QT, fields,params,phase,dx,dy);
+
+ 
+figure
+
+pcolor(X, Y, a);
+shading interp;
+colorbar;
+colormap jet;
+
+xlabel('x (м)');
+ylabel('y (м)');
+axis equal tight
+title('Qx * dQxduy');
+
+norm(a)
+
+
+%% ∑∑〖Q_T^(i1,j1)  (∂Q_T^(i1,j1))/(∂u_x^(i,j) )〗
+
+QT = computeEnergyResidual(fields, params, phase, dx, dy); 
+a = QT_dQT_dux(QT, fields,params,phase,dx,dy);
+
+ 
+figure
+
+pcolor(X, Y, a);
+shading interp;
+colorbar;
+colormap jet;
+
+xlabel('x (м)');
+ylabel('y (м)');
+axis equal tight
+title('Qx * dQxduy');
+
+norm(a)
