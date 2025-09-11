@@ -34,11 +34,12 @@ toc
 fields = initializeFields(X, Y, phase, params);
 
 %% УРАВНЕНИЕ НЕПРЕРЫВНОСТИ (ПРОИЗВОДНЫЕ ПО U_X,U_Y)
-
+%
 R_continuity = computeContinuityResidual(fields, params, phase, dx, dy); % невязка уравнения непрерывности
-
-d1 = continuity_du_x(params,phase,R_continuity,dx);
-d2 = continuity_du_y(params,phase,R_continuity,dy);
+% ∑_i▒∑_j▒〖Q_u^(i1,j1)  (∂Q_u^(i1,j1))/(∂u_x^(i,j) )〗
+d1 = Qu_dQu_dux(params,phase,R_continuity,dx);
+%∑_i▒∑_j▒〖Q_u^(i1,j1)  (∂Q_u^(i1,j1))/(∂u_y^(i,j) )〗
+d2 = Qu_dQu_duy(params,phase,R_continuity,dy);
 
 figure;
 
@@ -47,7 +48,7 @@ pcolor(X, Y, d1);
 shading interp;
 colorbar;
 colormap jet;
-title('dR/du_x');
+title('Qu_dQu/du_x');
 xlabel('x (м)');
 ylabel('y (м)');
 axis equal tight;
@@ -57,7 +58,7 @@ pcolor(X, Y, d2);
 shading interp;
 colorbar;
 colormap jet;
-title('dR/du_y');
+title('Qu_dQu/du_y');
 xlabel('x (м)');
 ylabel('y (м)');
 axis equal tight;
@@ -215,5 +216,25 @@ xlabel('x (м)');
 ylabel('y (м)');
 axis equal tight
 title('Qx * dQxduy');
+
+norm(a)
+
+%% ∑∑〖Q_T^(i1,j1)  (∂Q_T^(i1,j1))/(∂u_y^(i,j) )〗
+
+QT = computeEnergyResidual(fields, params, phase, dx, dy); 
+a = QT_dQT_duy(QT, fields,params,phase,dx,dy);
+
+ 
+figure
+
+pcolor(X, Y, a);
+shading interp;
+colorbar;
+colormap jet;
+
+xlabel('x (м)');
+ylabel('y (м)');
+axis equal tight
+title('Qx * dQTduy');
 
 norm(a)

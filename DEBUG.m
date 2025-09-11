@@ -60,7 +60,7 @@ pcolor(X, Y, R_continuity);
 shading interp;
 colorbar;
 colormap jet;
-title('dR/du_y');
+title('Qu');
 xlabel('x (м)');
 ylabel('y (м)');
 axis equal tight;
@@ -83,7 +83,7 @@ pcolor(X, Y, R_ns_x);
 shading interp;
 colorbar;
 colormap jet;
-title('Невязка уравнения Навье-Стокса (ОХ)');
+title('Qx');
 xlabel('x (м)');
 ylabel('y (м)');
 axis equal tight
@@ -104,7 +104,7 @@ pcolor(X, Y, R_ns_y);
 shading interp;
 colorbar;
 colormap jet;
-title('Невязка уравнения Навье-Стокса (ОY)');
+title('Qy');
 xlabel('x (м)');
 ylabel('y (м)');
 axis equal tight
@@ -125,7 +125,7 @@ pcolor(X, Y, R_energy);
 shading interp;
 colorbar;
 colormap jet;
-title('Невязка уравнения Энергии');
+title('QT');
 xlabel('x (м)');
 ylabel('y (м)');
 axis equal tight
