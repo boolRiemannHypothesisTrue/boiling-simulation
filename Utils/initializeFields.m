@@ -19,11 +19,11 @@ function fields = initializeFields(X, Y, phase, params)
         for j = 1:N
             if phase(i,j) == 0
                 % Жидкая фаза
-                T(i,j) = params.T_liquid;
+                T(i,j) = params.T_liquid + 10;
                 P(i,j) = P_init_liquid;
             else
                 % Паровая фаза
-                T(i,j) = params.T_wall;  % или можно задать другую температуру для пара
+                T(i,j) = params.T_wall + 10;  % или можно задать другую температуру для пара
                 P(i,j) = P_init_vapor;
             end
             % Скорости НЕнулевые но распределение однородное, везде

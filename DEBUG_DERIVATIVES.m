@@ -238,3 +238,49 @@ axis equal tight
 title('Qx * dQTduy');
 
 norm(a)
+
+%% Boundary conditions test
+
+% dp/dy ( y = inf ) = 0 
+a = Qb_p(fields);
+
+ 
+nice_plot(a,X,Y)
+
+norm(a)
+
+%% T(y = 0) = Tw
+
+a = Qb_T_1(fields,params);
+
+nice_plot(a,X,Y)
+
+%% T(y = inf) = Tl
+
+a = Qb_T_2(fields,params);
+
+nice_plot(a,X,Y)
+
+%% ux( y = 0) = 0
+
+a = Qb_ux_1(fields);
+
+nice_plot(a,X,Y)
+
+%% ux( y = inf) = 0
+
+a = Qb_ux_2(fields);
+
+nice_plot(a,X,Y)
+
+%% uy( y = 0) = 0
+
+a = Qb_uy_1(fields);
+
+nice_plot(a,X,Y)
+
+%% uy( y = inf) = 0
+
+a = Qb_uy_2(fields);
+
+nice_plot(a,X,Y)
