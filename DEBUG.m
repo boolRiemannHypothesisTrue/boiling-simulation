@@ -25,7 +25,9 @@ tic
 
 [y_interface, phase] = buildInterfaceAndPhase(X, Y, x_interface, params.c_init, ...
                                               params.y_min, params.y_max);
-
+% one phase
+[M,N] = size(phase);
+phase = ones(M,N);
 toc
 
 

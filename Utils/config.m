@@ -1,7 +1,7 @@
 function params = config()
     % Параметры сетки
-    params.N = 500;          % число ячеек по x
-    params.M = 500;          % число ячеек по y
+    params.N = 50;          % число ячеек по x
+    params.M = 50;          % число ячеек по y
 
     params.x_min = 0;
     params.x_max = 5e-2;

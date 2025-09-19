@@ -36,9 +36,9 @@ fields = initializeFields(X, Y, phase, params);
 %% УРАВНЕНИЕ НЕПРЕРЫВНОСТИ (ПРОИЗВОДНЫЕ ПО U_X,U_Y)
 %
 R_continuity = computeContinuityResidual(fields, params, phase, dx, dy); % невязка уравнения непрерывности
-% ∑_i▒∑_j▒〖Q_u^(i1,j1)  (∂Q_u^(i1,j1))/(∂u_x^(i,j) )〗
+% ∑_i ∑_j〖Q_u^(i1,j1)  (∂Q_u^(i1,j1))/(∂u_x^(i,j) )〗
 d1 = Qu_dQu_dux(params,phase,R_continuity,dx);
-%∑_i▒∑_j▒〖Q_u^(i1,j1)  (∂Q_u^(i1,j1))/(∂u_y^(i,j) )〗
+%∑_i ∑_j〖Q_u^(i1,j1)  (∂Q_u^(i1,j1))/(∂u_y^(i,j) )〗
 d2 = Qu_dQu_duy(params,phase,R_continuity,dy);
 
 figure;
@@ -258,7 +258,7 @@ nice_plot(a,X,Y)
 %% T(y = inf) = Tl
 
 a = Qb_T_2(fields,params);
-
+% a = Qb_T2_dQ_dT(a);
 nice_plot(a,X,Y)
 
 %% ux( y = 0) = 0
@@ -282,5 +282,69 @@ nice_plot(a,X,Y)
 %% uy( y = inf) = 0
 
 a = Qb_uy_2(fields);
+
+nice_plot(a,X,Y)
+
+%% GRAD UX
+
+Qu = computeContinuityResidual(fields, params, phase, dx, dy); % невязка уравнения непрерывности
+
+QT = computeEnergyResidual(fields, params, phase, dx, dy); % невязка уравнения энергии
+
+Qy = computeNSResidualY_full(fields, params, phase, dx, dy); 
+
+Qx = computeNSResidualX_full(fields, params, phase, dx, dy); 
+
+Qbux1 = Qb_ux_1(fields);
+
+Qbux2 = Qb_ux_2(fields);
+
+a = grad_ux(Qu,QT,Qx,Qy,Qbux1,Qbux2,fields,params,phase,dx,dy);
+
+nice_plot(a,X,Y)
+
+
+%% GRAD UY
+
+Qu = computeContinuityResidual(fields, params, phase, dx, dy); % невязка уравнения непрерывности
+
+QT = computeEnergyResidual(fields, params, phase, dx, dy); % невязка уравнения энергии
+
+Qy = computeNSResidualY_full(fields, params, phase, dx, dy); 
+
+Qx = computeNSResidualX_full(fields, params, phase, dx, dy); 
+
+Qbuy1 = Qb_uy_1(fields);
+
+Qbuy2 = Qb_uy_2(fields);
+
+a = grad_ux(Qu,QT,Qx,Qy,Qbuy1,Qbuy2,fields,params,phase,dx,dy);
+
+nice_plot(a,X,Y)
+
+
+
+%% GRAD T
+
+QT = computeEnergyResidual(fields, params, phase, dx, dy); % невязка уравнения энергии
+
+QbT1 = Qb_T_1(fields,params);
+
+QbT2 = Qb_T_2(fields,params);
+
+a = grad_T(QT,QbT1,QbT2,fields,params,phase,dx,dy);
+
+nice_plot(a,X,Y)
+
+%% GRAD p
+
+
+Qy = computeNSResidualY_full(fields, params, phase, dx, dy); 
+
+Qx = computeNSResidualX_full(fields, params, phase, dx, dy); 
+
+Qbp = Qb_p(fields);
+
+a = grad_p(Qx,Qy,Qbp,dx,dy);
 
 nice_plot(a,X,Y)
