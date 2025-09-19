@@ -41,18 +41,19 @@ fields = initializeFields(X, Y, phase, params);
 q0 = packParams(fields.u_x, fields.u_y, fields.T, fields.P);
 
 % параметры Adam
-stepSize = 1e-4;  % можно менять по необходимости
+stepSize = 0.5;  % можно менять по необходимости
 beta1 = 0.9;
 beta2 = 0.999;
 epsilon = 1e-8;
-nEpochSize = 50;
+nEpochSize = 500;
 options = optimset('GradObj','on','Display','iter');
 
 % функция цели
-fun = @(q) ResidualObjectiveVec(q, fields, params, phase, dx, dy, [Nx, Ny]);
+fun = @(q) ResidualObjectiveVecStable(q, fields, params, phase, dx, dy, [Nx, Ny]);
 
 % запуск оптимизации
 [qOptVec, fval, exitflag, output] = fmin_adam(fun, q0, stepSize, beta1, beta2, epsilon, nEpochSize, options);
 
 % распаковка оптимальных параметров
 [uxOpt, uyOpt, TOpt, pOpt] = unpackParams(qOptVec, [Nx, Ny]);
+
